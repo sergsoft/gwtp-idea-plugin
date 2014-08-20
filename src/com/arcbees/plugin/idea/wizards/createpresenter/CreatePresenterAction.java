@@ -29,6 +29,7 @@ import com.arcbees.plugin.idea.icons.PluginIcons;
 import com.arcbees.plugin.idea.utils.PackageHierarchy;
 import com.arcbees.plugin.idea.utils.PackageHierarchyElement;
 import com.arcbees.plugin.idea.utils.PackageUtilExt;
+import com.arcbees.plugin.idea.wizards.BaseCreateClassAction;
 import com.arcbees.plugin.template.create.place.CreateNameTokens;
 import com.arcbees.plugin.template.create.presenter.CreateNestedPresenter;
 import com.arcbees.plugin.template.create.presenter.CreatePopupPresenter;
@@ -76,7 +77,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class CreatePresenterAction extends AnAction {
+public class CreatePresenterAction extends BaseCreateClassAction {
     public final static Logger logger = Logger.getLogger(CreatePresenterAction.class.getName());
 
     // project model settings
@@ -438,90 +439,7 @@ public class CreatePresenterAction extends AnAction {
         navigateToClass(createdModulePsiClass);
     }
 
-    private void navigateToClass(final PsiClass psiClass) {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        psiClass.navigate(true);
-                    }
-                });
-            }
-        }, ModalityState.NON_MODAL);
-    }
 
-    private PsiClass createPsiClass(final PsiPackage createInPsiPackage, RenderedTemplate renderedTemplate) {
-        final String className = renderedTemplate.getNameAndNoExt();
-        final String contents = renderedTemplate.getContents();
-
-        final PsiPackageModel psiPackageModel = new PsiPackageModel();
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-            @Override
-            public void run() {
-                PsiDirectory[] directoriesInPackage = createInPsiPackage.getDirectories();
-                PsiDirectory dir = directoriesInPackage[0];
-                psiPackageModel.set(dir);
-            }
-        });
-
-        final PsiElementModel elementModel = new PsiElementModel();
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-            @Override
-            public void run() {
-                PsiFile element = PsiFileFactory.getInstance(project).createFileFromText(
-                        className, JavaFileType.INSTANCE, contents);
-                elementModel.set(element);
-            }
-        });
-
-        final PsiElementModel createdJavaFileModel = new PsiElementModel();
-        ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        PsiElement element = elementModel.get();
-                        PsiDirectory dir = psiPackageModel.get();
-                        PsiElement createdElement = dir.add(element);
-                        // TODO fail
-                        createdJavaFileModel.set(createdElement);
-                    }
-                });
-            }
-        }, ModalityState.NON_MODAL);
-
-        final PsiClassModel psiClassModelModel = new PsiClassModel();
-        ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        PsiClass[] createdClasses = createdJavaFileModel.getJavaFile().getClasses();
-                        psiClassModelModel.set(createdClasses[0]);
-                        CodeStyleManager.getInstance(project).reformat(createdClasses[0]);
-                    }
-                });
-            }
-        }, ModalityState.NON_MODAL);
-
-        ApplicationManager.getApplication().invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                ApplicationManager.getApplication().runWriteAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        JavaCodeStyleManager.getInstance(project).optimizeImports(psiClassModelModel.get().getContainingFile());
-                    }
-                });
-            }
-        }, ModalityState.NON_MODAL);
-
-        return psiClassModelModel.get();
-    }
 
     private void createPresenterPackage() {
         PsiDirectory baseDir = getBaseDir();

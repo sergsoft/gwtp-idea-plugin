@@ -34,6 +34,8 @@
                     class="com.arcbees.plugin.idea.wizards.createpresenter.CreatePresenterAction">
             </action>
 
+            <action class="com.arcbees.plugin.idea.wizards.createevent.CreateEventAction" id="GWT.NewEvent" text="Create a GWTP Event" description="Create event"/>
+
             <add-to-group group-id="NewGroup" anchor="last" relative-to-action="NewFile"/>
         </group>
     </actions>
