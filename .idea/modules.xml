@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/gwtp-idea-plugin.iml" filepath="$PROJECT_DIR$/gwtp-idea-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../IDE-Templates/ide-templates.iml" filepath="$PROJECT_DIR$/../IDE-Templates/ide-templates.iml" />
     </modules>
   </component>
 </project>

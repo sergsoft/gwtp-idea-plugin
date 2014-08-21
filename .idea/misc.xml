@@ -10,11 +10,6 @@
         <option value="$PROJECT_DIR$/../IDE-Templates/pom.xml" />
       </list>
     </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/../IDE-Templates/pom.xml" />
-      </set>
-    </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA IU-135.1230" project-jdk-type="IDEA JDK">
     <output url="file://$PROJECT_DIR$/out" />
