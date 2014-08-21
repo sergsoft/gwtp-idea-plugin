@@ -1,28 +1,19 @@
 package com.arcbees.plugin.idea.wizards.createevent;
 
 import com.arcbees.plugin.idea.domain.EventModel;
-import com.arcbees.plugin.idea.domain.PsiClassModel;
-import com.arcbees.plugin.idea.domain.PsiElementModel;
-import com.arcbees.plugin.idea.domain.PsiPackageModel;
+import com.arcbees.plugin.idea.domain.ParameterModel;
 import com.arcbees.plugin.idea.icons.PluginIcons;
 import com.arcbees.plugin.idea.wizards.BaseCreateClassAction;
+import com.arcbees.plugin.template.create.event.CreateEvent;
+import com.arcbees.plugin.template.domain.ParameterOptions;
+import com.arcbees.plugin.template.domain.event.CreatedEvent;
+import com.arcbees.plugin.template.domain.event.EventOptions;
 import com.arcbees.plugin.template.domain.presenter.RenderedTemplate;
-import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.PsiPackage;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 
 import java.util.logging.Logger;
 
@@ -35,6 +26,8 @@ public class CreateEventAction extends BaseCreateClassAction {
 
     private EventModel eventModel;
     private PsiClass createdEventPsiClass;
+
+    private RenderedTemplate createdEventTemplate;
 
     public CreateEventAction() {
         super("Create event", "Create GWTP event", PluginIcons.GWTPEvent_ICON_16x16);
@@ -62,22 +55,50 @@ public class CreateEventAction extends BaseCreateClassAction {
 
     private void run(ProgressIndicator indicator) {
         indicator.setText("Fetch templates");
-        fetchTemplates();
+        try {
+            fetchTemplates();
+        } catch (Exception e) {
+            error("Could not fetch NameTokens templates: Error: " + e.toString());
+            e.printStackTrace();
+            return;
+        }
 
-        indicator.setFraction(.3);
+        indicator.setFraction(.5);
         indicator.setText("Generating classes");
         createEventClass();
+
+        indicator.setText("Event class was generated");
     }
 
-    private void fetchTemplates() {
+    private void fetchTemplates() throws Exception {
+        EventOptions eventOptions = new EventOptions();
 
+        eventOptions.setName(eventModel.getName());
+        eventOptions.setPackageName(eventModel.getSelectedPackageRoot().getQualifiedName());
+
+        for (ParameterModel parameterModel: eventModel.getParameters()){
+            ParameterOptions parameterOptions = new ParameterOptions();
+
+            parameterOptions.setName(parameterModel.getName());
+            parameterOptions.setType(parameterModel.getType());
+
+            eventOptions.getParameters().add(parameterOptions);
+        }
+
+        CreatedEvent createdEvent = CreateEvent.run(eventOptions);
+        createdEventTemplate = createdEvent.getEvent();
     }
 
     private void createEventClass() {
-        RenderedTemplate renderedTemplate = null;
-        createdEventPsiClass = createPsiClass(eventModel.getSelectedPackageRoot(), renderedTemplate);
-
+        createdEventPsiClass = createPsiClass(eventModel.getSelectedPackageRoot(), createdEventTemplate);
         navigateToClass(createdEventPsiClass);
     }
 
+    private void warn(String message) {
+        Messages.showWarningDialog(message, "Warning");
+    }
+
+    private void error(String message) {
+        Messages.showErrorDialog(message, "Error");
+    }
 }

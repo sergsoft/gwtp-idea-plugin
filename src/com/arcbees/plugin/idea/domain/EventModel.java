@@ -4,6 +4,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiPackage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Serg on 20.08.2014.
  */
@@ -14,7 +17,10 @@ public class EventModel {
     private PsiPackage selectedPackageRoot;
 
     private Project project;
+
     private Module module;
+
+    private List<ParameterModel> parameters = new ArrayList<ParameterModel>();
 
     public EventModel(Project project) {
         this.project = project;
@@ -46,5 +52,17 @@ public class EventModel {
 
     public Module getModule() {
         return module;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public List<ParameterModel> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<ParameterModel> parameters) {
+        this.parameters = parameters;
     }
 }

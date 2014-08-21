@@ -6,6 +6,9 @@
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/lib/ide-templates.jar!/" />
+      <root url="file://$PROJECT_DIR$/../IDE-Templates/src/main/java" />
+      <root url="file://$PROJECT_DIR$/../IDE-Templates/src/main/java" />
+      <root url="file://$PROJECT_DIR$/../IDE-Templates/src/test/java" />
     </SOURCES>
   </library>
 </component>

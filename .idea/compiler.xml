@@ -22,10 +22,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="ide-templates" />
         <module name="plugin-templates" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.6">
+      <module name="ide-templates" target="1.6" />
       <module name="plugin-templates" target="1.6" />
     </bytecodeTargetLevel>
   </component>

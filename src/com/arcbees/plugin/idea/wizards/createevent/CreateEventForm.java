@@ -1,6 +1,8 @@
 package com.arcbees.plugin.idea.wizards.createevent;
 
+import com.arcbees.plugin.idea.dialogs.ParameterEditDialog;
 import com.arcbees.plugin.idea.domain.EventModel;
+import com.arcbees.plugin.idea.domain.ParameterModel;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
@@ -13,22 +15,22 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiPackage;
-import com.intellij.ui.GuiUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class CreateEventForm extends DialogWrapper {
+
     private JPanel contentPane;
     private JTextField edName;
+    private JTable parameters;
+    private JButton buAddParameter;
+    private JButton buDelParameter;
 
     private EventModel eventModel;
     private AnActionEvent anActionEvent;
+    private ParametersTableModel parametersTableModel = new ParametersTableModel();
 
     public CreateEventForm(EventModel eventModel, AnActionEvent anActionEvent) {
         super(eventModel.getProject());
@@ -46,9 +48,41 @@ public class CreateEventForm extends DialogWrapper {
 
     private void setDefaults() {
         eventModel.setSelectedPackageRoot(getSelectedPackageRoot());
+        edName.requestFocusInWindow();
+
+        parameters.setModel(parametersTableModel);
     }
 
     private void initHandlers() {
+        initButtonHandlers();
+    }
+
+    private void initButtonHandlers() {
+        buAddParameter.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ParameterEditDialog dialog = new ParameterEditDialog(eventModel.getProject(), false);
+                if (dialog.showAndGet()){
+                    ParameterModel parameterModel = new ParameterModel();
+                    dialog.getData(parameterModel);
+                    eventModel.getParameters().add(parameterModel);
+                    refreshParams();
+                }
+            }
+        });
+        buDelParameter.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (parameters.getSelectedRow() >= 0) {
+                    eventModel.getParameters().remove(parameters.getSelectedRow());
+                    refreshParams();
+                }
+            }
+        });
+    }
+
+    private void refreshParams() {
+        parametersTableModel.setParameterModels(eventModel.getParameters());
     }
 
 
@@ -56,10 +90,6 @@ public class CreateEventForm extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         return contentPane;
-    }
-
-    public void getData(EventModel eventModel) {
-        eventModel.setName(edName.getText());
     }
 
     public PsiPackage getSelectedPackageRoot() {
@@ -80,5 +110,14 @@ public class CreateEventForm extends DialogWrapper {
         eventModel.setModule(module);
 
         return selectedPackage;
+    }
+
+    public void getData(EventModel data) {
+        data.setName(edName.getText());
+    }
+
+    public boolean isModified(EventModel data) {
+        if (edName.getText() != null ? !edName.getText().equals(data.getName()) : data.getName() != null) return true;
+        return false;
     }
 }
