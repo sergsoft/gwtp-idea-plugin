@@ -301,7 +301,7 @@ public class PackageUtilExt {
         return rootPackage.getDirectories(GlobalSearchScope.moduleScope(module));
     }
 
-    private static PsiPackage findLongestExistingPackage(Project project, String packageName) {
+    public static PsiPackage findLongestExistingPackage(Project project, String packageName) {
         PsiManager manager = PsiManager.getInstance(project);
         String nameToMatch = packageName;
         while (true) {
@@ -337,7 +337,7 @@ public class PackageUtilExt {
         return null;
     }
 
-    private static PsiPackage findLongestExistingPackage(Module module, String packageName) {
+    public static PsiPackage findLongestExistingPackage(Module module, String packageName) {
         final PsiManager manager = PsiManager.getInstance(module.getProject());
 
         String nameToMatch = packageName;
@@ -398,5 +398,29 @@ public class PackageUtilExt {
             subDirectory = directory.createSubdirectory(directoryName);
         }
         return subDirectory;
+    }
+
+    public static String getClientPackage(PsiPackage psiPackage){
+        if (psiPackage.getQualifiedName().matches("(.*)\\.server(.*)")){
+            return psiPackage.getQualifiedName().replaceAll("(.*)\\.server(.*)", "$1.client");
+        }
+
+        if (psiPackage != null){
+            return psiPackage.getQualifiedName();
+        }
+
+        return "";
+    }
+
+    public static String getServerPackage(PsiPackage psiPackage){
+        if (psiPackage.getQualifiedName().matches("(.*)\\.client(.*)")){
+            return psiPackage.getQualifiedName().replaceAll("(.*)\\.client(.*)", "$1.server");
+        }
+
+        if (psiPackage != null){
+            return psiPackage.getQualifiedName();
+        }
+
+        return "";
     }
 }

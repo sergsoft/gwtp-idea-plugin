@@ -3,6 +3,7 @@ package com.arcbees.plugin.idea.wizards.createaction;
 import com.arcbees.plugin.idea.domain.ActionModel;
 import com.arcbees.plugin.idea.domain.ParameterModel;
 import com.arcbees.plugin.idea.icons.PluginIcons;
+import com.arcbees.plugin.idea.utils.PackageUtilExt;
 import com.arcbees.plugin.idea.wizards.BaseCreateClassAction;
 import com.arcbees.plugin.template.create.action.CreateAction;
 import com.arcbees.plugin.template.domain.ParameterOptions;
@@ -14,6 +15,7 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiPackage;
 
 /**
  * Created by serg on 22.08.2014.
@@ -67,13 +69,15 @@ public class CreateActionAction extends BaseCreateClassAction {
     }
 
     private void createActionClasses() {
-        PsiClass actionPsiClass = createPsiClass(actModel.getPackageName(), actionTemplate);
+        PsiPackage pkg = PackageUtilExt.findLongestExistingPackage(actModel.getModule(), actModel.getPackageName());
+        PsiClass actionPsiClass = createPsiClass(pkg, actionTemplate);
         navigateToClass(actionPsiClass);
 
-        PsiClass resultPsiClass = createPsiClass(actModel.getPackageName(), resultTemplate);
+        PsiClass resultPsiClass = createPsiClass(pkg, resultTemplate);
         navigateToClass(resultPsiClass);
 
-        PsiClass handlerPsiClass = createPsiClass(actModel.getActionHandlerPkg(), handlerTemplate);
+        pkg = PackageUtilExt.findLongestExistingPackage(actModel.getModule(), actModel.getActionHandlerPkg());
+        PsiClass handlerPsiClass = createPsiClass(pkg, handlerTemplate);
         navigateToClass(handlerPsiClass);
     }
 
@@ -81,8 +85,8 @@ public class CreateActionAction extends BaseCreateClassAction {
         ActionOptions actionOptions = new ActionOptions();
 
         actionOptions.setName(actModel.getName());
-        actionOptions.setPackageName(actModel.getPackageName().getQualifiedName());
-        actionOptions.setActionHandlerPkg(actModel.getActionHandlerPkg().getQualifiedName());
+        actionOptions.setPackageName(actModel.getPackageName());
+        actionOptions.setActionHandlerPkg(actModel.getActionHandlerPkg());
         actionOptions.setWithoutSecure(actModel.isWithoutSecure());
 
         for (ParameterModel parameterModel: actModel.getActionFields()){
@@ -104,6 +108,11 @@ public class CreateActionAction extends BaseCreateClassAction {
         }
 
         CreateAction createAction = new CreateAction(actionOptions);
+        try {
+            createAction.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         actionTemplate = createAction.getCreated().getRequest();
         resultTemplate = createAction.getCreated().getResult();
         handlerTemplate = createAction.getCreated().getActionHandler();

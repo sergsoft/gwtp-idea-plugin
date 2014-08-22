@@ -3,7 +3,6 @@ package com.arcbees.plugin.idea.domain;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiPackage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ public class ActionModel {
 
     private String name;
 
-    private PsiPackage packageName;
+    private String packageName;
 
     private PsiClass superClass;
 
@@ -25,13 +24,15 @@ public class ActionModel {
 
     private List<ParameterModel> resultFileds = new ArrayList<ParameterModel>();
 
-    private PsiPackage actionHandlerPkg;
+    private String actionHandlerPkg;
 
     private PsiClass actionValidator;
 
     private Module handlerModule;
 
     private boolean withoutSecure = false;
+
+    private Module module;
 
     public ActionModel(Project project) {
         this.project = project;
@@ -45,11 +46,11 @@ public class ActionModel {
         this.project = project;
     }
 
-    public PsiPackage getPackageName() {
+    public String getPackageName() {
         return packageName;
     }
 
-    public void setPackageName(PsiPackage packageName) {
+    public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
 
@@ -77,11 +78,11 @@ public class ActionModel {
         this.resultFileds = resultFileds;
     }
 
-    public PsiPackage getActionHandlerPkg() {
+    public String getActionHandlerPkg() {
         return actionHandlerPkg;
     }
 
-    public void setActionHandlerPkg(PsiPackage actionHandlerPkg) {
+    public void setActionHandlerPkg(String actionHandlerPkg) {
         this.actionHandlerPkg = actionHandlerPkg;
     }
 
@@ -115,5 +116,13 @@ public class ActionModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setModule(Module module) {
+        this.module = module;
+    }
+
+    public Module getModule() {
+        return module;
     }
 }

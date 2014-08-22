@@ -3,10 +3,21 @@ package com.arcbees.plugin.idea.wizards.createaction;
 import com.arcbees.plugin.idea.dialogs.ParameterEditDialog;
 import com.arcbees.plugin.idea.domain.ActionModel;
 import com.arcbees.plugin.idea.domain.ParameterModel;
+import com.arcbees.plugin.idea.utils.PackageUtilExt;
 import com.arcbees.plugin.idea.wizards.ParametersTableModel;
 import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.psi.JavaDirectoryService;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiPackage;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -50,6 +61,8 @@ public class CreateActionForm extends DialogWrapper {
     private void setDefaults() {
         tblActionFields.setModel(actionParameterModel);
         tblResultFlieds.setModel(resParameterModel);
+        edClientPackage.setText(PackageUtilExt.getClientPackage(getSelectedPackageRoot()));
+        edServerPackage.setText(PackageUtilExt.getServerPackage(getSelectedPackageRoot()));
     }
 
     private void initHandlers() {
@@ -61,10 +74,9 @@ public class CreateActionForm extends DialogWrapper {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PackageChooserDialog dialog = new PackageChooserDialog("Select a package", actionModel.getProject());
-                dialog.selectPackage("*.client");
+                dialog.selectPackage(PackageUtilExt.getClientPackage(getSelectedPackageRoot()));
                 if (dialog.showAndGet()){
-                    actionModel.setPackageName(dialog.getSelectedPackage());
-                    edClientPackage.setText(dialog.getSelectedPackage().getText());
+                    edClientPackage.setText(dialog.getSelectedPackage().getQualifiedName());
                 }
             }
         });
@@ -72,10 +84,9 @@ public class CreateActionForm extends DialogWrapper {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PackageChooserDialog dialog = new PackageChooserDialog("Select a package", actionModel.getProject());
-                dialog.selectPackage("*.server");
+                dialog.selectPackage(PackageUtilExt.getServerPackage(getSelectedPackageRoot()));
                 if (dialog.showAndGet()){
-                    actionModel.setActionHandlerPkg(dialog.getSelectedPackage());
-                    edServerPackage.setText(dialog.getSelectedPackage().getText());
+                    edServerPackage.setText(dialog.getSelectedPackage().getQualifiedName());
                 }
             }
         });
@@ -151,11 +162,33 @@ public class CreateActionForm extends DialogWrapper {
     public void getData(ActionModel data) {
         data.setName(edName.getText());
         data.setWithoutSecure(cbWithoutSecure.isSelected());
+        data.setPackageName(edClientPackage.getText());
+        data.setActionHandlerPkg(edServerPackage.getText());
     }
 
     public boolean isModified(ActionModel data) {
         if (edName.getText() != null ? !edName.getText().equals(data.getName()) : data.getName() != null) return true;
         if (cbWithoutSecure.isSelected() != data.isWithoutSecure()) return true;
         return false;
+    }
+
+    public PsiPackage getSelectedPackageRoot() {
+        PsiElement e = anActionEvent.getData(LangDataKeys.PSI_ELEMENT);
+
+        PsiPackage selectedPackage = null;
+        if (e instanceof PsiClass) {
+            PsiClass clazz = (PsiClass) e;
+            PsiJavaFile javaFile = (PsiJavaFile) clazz.getContainingFile();
+            selectedPackage = JavaPsiFacade.getInstance(actionModel.getProject()).findPackage(javaFile.getPackageName());
+
+        } else if (e instanceof PsiDirectory) {
+            selectedPackage = JavaDirectoryService.getInstance().getPackage((PsiDirectory) e);
+        }
+
+        Module module = ModuleUtil.findModuleForPsiElement(e);
+
+        actionModel.setModule(module);
+
+        return selectedPackage;
     }
 }

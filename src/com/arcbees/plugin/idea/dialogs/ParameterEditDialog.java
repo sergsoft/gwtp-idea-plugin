@@ -4,13 +4,11 @@ import com.arcbees.plugin.idea.domain.ParameterModel;
 import com.intellij.ide.util.ClassFilter;
 import com.intellij.ide.util.TreeClassChooser;
 import com.intellij.ide.util.TreeClassChooserFactory;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.intellij.psi.impl.file.PsiPackageImpl;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.PackageScope;
+import com.intellij.psi.search.ProjectAndLibrariesScope;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -50,8 +48,7 @@ public class ParameterEditDialog extends DialogWrapper {
     }
 
     private GlobalSearchScope getGlobalScope() {
-        Module
-        return new PackageScope(new PsiPackageImpl());
+        return new ProjectAndLibrariesScope(project);
     }
 
     @Nullable
