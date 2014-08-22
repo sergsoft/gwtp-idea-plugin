@@ -3,6 +3,7 @@ package com.arcbees.plugin.idea.wizards.createevent;
 import com.arcbees.plugin.idea.dialogs.ParameterEditDialog;
 import com.arcbees.plugin.idea.domain.EventModel;
 import com.arcbees.plugin.idea.domain.ParameterModel;
+import com.arcbees.plugin.idea.wizards.ParametersTableModel;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;

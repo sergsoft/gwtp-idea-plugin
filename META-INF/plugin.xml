@@ -36,8 +36,13 @@
 
             <action class="com.arcbees.plugin.idea.wizards.createevent.CreateEventAction" id="GWT.NewEvent" text="Create a GWTP Event" description="Create event"/>
 
+            <action id="GWTP.NewAction" class="com.arcbees.plugin.idea.wizards.createaction.CreateActionAction"
+                    text="Create action" description="Create GWTP action">
+            </action>
+
             <add-to-group group-id="NewGroup" anchor="last" relative-to-action="NewFile"/>
         </group>
+
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">

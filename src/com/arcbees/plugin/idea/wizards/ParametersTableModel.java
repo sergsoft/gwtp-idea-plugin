@@ -1,4 +1,4 @@
-package com.arcbees.plugin.idea.wizards.createevent;
+package com.arcbees.plugin.idea.wizards;
 
 import com.arcbees.plugin.idea.domain.ParameterModel;
 

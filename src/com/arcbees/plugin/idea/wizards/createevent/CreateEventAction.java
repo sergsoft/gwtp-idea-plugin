@@ -58,7 +58,7 @@ public class CreateEventAction extends BaseCreateClassAction {
         try {
             fetchTemplates();
         } catch (Exception e) {
-            error("Could not fetch NameTokens templates: Error: " + e.toString());
+            error("Could not fetch event templates: Error: " + e.toString());
             e.printStackTrace();
             return;
         }

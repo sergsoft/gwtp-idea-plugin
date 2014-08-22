@@ -23,4 +23,5 @@ import javax.swing.*;
 public interface PluginIcons {
     Icon GWTP_ICON_16x16 = IconLoader.getIcon("/com/arcbees/plugin/idea/icons/addgwtp_16X16.png");
     Icon GWTPEvent_ICON_16x16 = IconLoader.getIcon("/com/arcbees/plugin/idea/icons/addevent_16X16.png");
+    Icon GWTPAction_ICON_16x16 = IconLoader.getIcon("/com/arcbees/plugin/idea/icons/addaction_16X16.png");
 }

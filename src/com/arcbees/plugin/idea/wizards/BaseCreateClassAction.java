@@ -30,6 +30,10 @@ public abstract class BaseCreateClassAction extends AnAction {
         super(text, description, icon);
     }
 
+    public BaseCreateClassAction(Icon icon) {
+        super(icon);
+    }
+
     protected void navigateToClass(final PsiClass psiClass) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
