@@ -1,5 +1,9 @@
 #GWT-Platform (GWTP) IntelliJ IDEA Plugin
-The [GWTP](https://github.com/ArcBees/GWTP) Eclipse plugin provides tools for GWTP framework in Eclipse. 
+The [GWTP](https://github.com/ArcBees/GWTP) Eclipse plugin provides tools for GWTP framework in Eclipse.
+
+#Release notes
+1.1.0
+* Added Event wizard
 
 ###GWTP Reference
 * [GWTP Custom Google Search](http://www.google.com/cse/home?cx=011138278718949652927:5yuja8xc600) - Search GWTP documentation, wiki and thread collections.
