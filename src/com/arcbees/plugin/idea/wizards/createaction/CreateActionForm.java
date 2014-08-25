@@ -11,6 +11,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
@@ -21,6 +22,7 @@ import com.intellij.psi.PsiPackage;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class CreateActionForm extends DialogWrapper {
@@ -151,12 +153,8 @@ public class CreateActionForm extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
+        contentPane.setPreferredSize(new Dimension(800, 500));
         return contentPane;
-    }
-
-    public void setData(ActionModel data) {
-        edName.setText(data.getName());
-        cbWithoutSecure.setSelected(data.isWithoutSecure());
     }
 
     public void getData(ActionModel data) {
@@ -190,5 +188,26 @@ public class CreateActionForm extends DialogWrapper {
         actionModel.setModule(module);
 
         return selectedPackage;
+    }
+
+    @Nullable
+    @Override
+    protected ValidationInfo doValidate() {
+        if (edName.getText().equals(""))
+            return new ValidationInfo("Name of action should be entered", edName);
+
+        if (edClientPackage.getText().equals(""))
+            return new ValidationInfo("Client package should be selected", edClientPackage);
+
+        if (edServerPackage.getText().equals(""))
+            return new ValidationInfo("Server package should be selected", edServerPackage);
+
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return edName;
     }
 }

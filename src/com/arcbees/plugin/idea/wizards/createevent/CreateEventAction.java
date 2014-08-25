@@ -10,6 +10,7 @@ import com.arcbees.plugin.template.domain.event.CreatedEvent;
 import com.arcbees.plugin.template.domain.event.EventOptions;
 import com.arcbees.plugin.template.domain.presenter.RenderedTemplate;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
@@ -44,13 +45,20 @@ public class CreateEventAction extends BaseCreateClassAction {
 
         dialog.getData(eventModel);
 
-        new Task.Backgroundable(eventModel.getProject(), "Create Event", true) {
-            public void run(ProgressIndicator indicator) {
-                indicator.setFraction(0.0);
-                CreateEventAction.this.run(indicator);
-                indicator.setFraction(1.0);
+        new WriteCommandAction.Simple(project){
+
+            @Override
+            protected void run() throws Throwable {
+                new Task.Backgroundable(eventModel.getProject(), "Create Event", true) {
+                    public void run(ProgressIndicator indicator) {
+                        indicator.setFraction(0.0);
+                        CreateEventAction.this.run(indicator);
+                        indicator.setFraction(1.0);
+                    }
+                }.setCancelText("Cancel Event Creation").queue();
             }
-        }.setCancelText("Cancel Event Creation").queue();
+        }.execute();
+
     }
 
     private void run(ProgressIndicator indicator) {

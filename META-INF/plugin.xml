@@ -9,8 +9,8 @@
       ]]></description>
 
     <change-notes><![CDATA[
-      Project creation from archetype.<br/>
-      Project Creation by Archetype added (11/15/2013).<br/>
+      Added a GWTP action.<br/>
+      Added a GWTP event.<br/>
       ]]>
     </change-notes>
 
@@ -34,10 +34,14 @@
                     class="com.arcbees.plugin.idea.wizards.createpresenter.CreatePresenterAction">
             </action>
 
-            <action class="com.arcbees.plugin.idea.wizards.createevent.CreateEventAction" id="GWT.NewEvent" text="Create a GWTP Event" description="Create event"/>
+            <action class="com.arcbees.plugin.idea.wizards.createevent.CreateEventAction"
+                    id="GWT.NewEvent"
+                    text="Create a GWTP Event"
+                    description="Create event"/>
 
             <action id="GWTP.NewAction" class="com.arcbees.plugin.idea.wizards.createaction.CreateActionAction"
-                    text="Create action" description="Create GWTP action">
+                    text="Create a GWTP action"
+                    description="Create action">
             </action>
 
             <add-to-group group-id="NewGroup" anchor="last" relative-to-action="NewFile"/>

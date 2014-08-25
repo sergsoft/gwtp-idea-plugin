@@ -121,4 +121,10 @@ public class CreateEventForm extends DialogWrapper {
         if (edName.getText() != null ? !edName.getText().equals(data.getName()) : data.getName() != null) return true;
         return false;
     }
+
+    @Nullable
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return edName;
+    }
 }

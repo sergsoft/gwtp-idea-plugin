@@ -10,9 +10,9 @@ import com.arcbees.plugin.template.domain.ParameterOptions;
 import com.arcbees.plugin.template.domain.action.ActionOptions;
 import com.arcbees.plugin.template.domain.presenter.RenderedTemplate;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiPackage;
@@ -22,7 +22,6 @@ import com.intellij.psi.PsiPackage;
  */
 public class CreateActionAction extends BaseCreateClassAction {
 
-    private Project project;
     private ActionModel actModel;
     private RenderedTemplate actionTemplate;
     private RenderedTemplate resultTemplate;
@@ -42,13 +41,20 @@ public class CreateActionAction extends BaseCreateClassAction {
 
         dialog.getData(actModel);
 
-        new Task.Backgroundable(actModel.getProject(), "Create Action", true) {
-            public void run(ProgressIndicator indicator) {
-                indicator.setFraction(0.0);
-                CreateActionAction.this.run(indicator);
-                indicator.setFraction(1.0);
+        new WriteCommandAction.Simple(project){
+
+            @Override
+            protected void run() throws Throwable {
+                new Task.Backgroundable(actModel.getProject(), "Create Action", true) {
+                    public void run(ProgressIndicator indicator) {
+                        indicator.setFraction(0.0);
+                        CreateActionAction.this.run(indicator);
+                        indicator.setFraction(1.0);
+                    }
+                }.setCancelText("Cancel action Creation").queue();
             }
-        }.setCancelText("Cancel action Creation").queue();
+        }.execute();
+
     }
 
     private void run(ProgressIndicator indicator) {
@@ -121,4 +127,6 @@ public class CreateActionAction extends BaseCreateClassAction {
     private void error(String message) {
         Messages.showErrorDialog(message, "Error");
     }
+
+
 }

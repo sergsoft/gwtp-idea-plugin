@@ -1,5 +1,6 @@
 package com.arcbees.plugin.idea.domain;
 
+import com.arcbees.plugin.idea.utils.IdUtils;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiPackage;
@@ -31,7 +32,7 @@ public class EventModel {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = IdUtils.capitalizeFirst(name);
     }
 
     public PsiPackage getSelectedPackageRoot() {
