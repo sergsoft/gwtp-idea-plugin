@@ -19,19 +19,23 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 
 import javax.swing.*;
+import java.util.logging.Logger;
 
 /**
  * Created by Serg on 20.08.2014.
  */
 public abstract class BaseCreateClassAction extends AnAction {
     protected Project project;
+    protected Logger logger;
 
     public BaseCreateClassAction(String text, String description, Icon icon) {
         super(text, description, icon);
+        logger = Logger.getLogger(getClass().getName());
     }
 
     public BaseCreateClassAction(Icon icon) {
         super(icon);
+        logger = Logger.getLogger(getClass().getName());
     }
 
     protected void navigateToClass(final PsiClass psiClass) {

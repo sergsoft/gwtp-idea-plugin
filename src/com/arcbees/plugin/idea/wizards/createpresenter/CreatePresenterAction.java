@@ -17,7 +17,6 @@
 package com.arcbees.plugin.idea.wizards.createpresenter;
 
 import com.arcbees.plugin.idea.domain.PresenterConfigModel;
-import com.arcbees.plugin.idea.domain.PsiClassModel;
 import com.arcbees.plugin.idea.domain.PsiDirectoriesModel;
 import com.arcbees.plugin.idea.domain.PsiElementModel;
 import com.arcbees.plugin.idea.domain.PsiFieldModel;
@@ -45,21 +44,17 @@ import com.arcbees.plugin.template.domain.presenter.PopupPresenterOptions;
 import com.arcbees.plugin.template.domain.presenter.PresenterOptions;
 import com.arcbees.plugin.template.domain.presenter.PresenterWidgetOptions;
 import com.arcbees.plugin.template.domain.presenter.RenderedTemplate;
-import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.ide.highlighter.XmlFileType;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementFactory;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiFile;
@@ -75,14 +70,10 @@ import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class CreatePresenterAction extends BaseCreateClassAction {
-    public final static Logger logger = Logger.getLogger(CreatePresenterAction.class.getName());
-
     // project model settings
     private PresenterConfigModel presenterConfigModel;
-    private Project project;
     private PackageHierarchy packageHierarchy;
 
     // created elements

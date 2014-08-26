@@ -16,14 +16,10 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiClass;
 
-import java.util.logging.Logger;
-
 /**
  * Created by Serg on 20.08.2014.
  */
 public class CreateEventAction extends BaseCreateClassAction {
-
-    private final static Logger logger = Logger.getLogger(CreateEventAction.class.getName());
 
     private EventModel eventModel;
     private PsiClass createdEventPsiClass;
